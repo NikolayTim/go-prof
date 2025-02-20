@@ -5,7 +5,9 @@ run:
     - !bench
 
 output:
-  formats: colored-line-number
+  formats:
+    - format: colored-line-number
+      path: stdout
 
 linters-settings:
   funlen:
