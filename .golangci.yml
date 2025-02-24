@@ -4,11 +4,6 @@ run:
     - bench
     - !bench
 
-output:
-  formats:
-    - format: colored-line-number
-      path: stdout
-
 linters-settings:
   funlen:
     lines: 150
@@ -27,14 +22,6 @@ linters-settings:
         allow:
           - $gostd
           - github.com/stretchr/testify
-  #gci:
-  #  custom-order: true
-  #  sections:
-  #    - standard
-  #    - default
-  #    - prefix(github.com/org/project)
-  #    - localmodule
-
 issues:
   exclude-rules:
     - path: _test\.go
@@ -57,14 +44,14 @@ linters:
     - exhaustive
     - copyloopvar
     - funlen
-    #- gci
+    - gci
     - gocognit
     - goconst
     - gocritic
     - gocyclo
     - godot
     - gofmt
-    #- gofumpt
+    - gofumpt
     - goheader
     - goprintffuncname
     - gosec
