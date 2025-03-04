@@ -31,7 +31,7 @@ func Top10(str string) []string {
 		wordsMap[v]++
 	}
 
-	var sortedWords []sortedWord
+	var sortedWords []sortedWord //nolint:prealloc
 	for word, count := range wordsMap {
 		sortedWords = append(sortedWords, sortedWord{word, count})
 	}
@@ -44,7 +44,7 @@ func Top10(str string) []string {
 		return sortedWords[i].word < sortedWords[j].word
 	})
 
-	var result []string
+	var result []string //nolint:prealloc
 	for i, v := range sortedWords {
 		if i > 9 {
 			break
