@@ -1,6 +1,7 @@
 package hw04lrucache
 
 import (
+	"fmt"
 	"math/rand"
 	"strconv"
 	"sync"
@@ -50,13 +51,111 @@ func TestCache(t *testing.T) {
 	})
 
 	t.Run("purge logic", func(t *testing.T) {
-		// Write me
+		var value interface{}
+
+		c := NewCache(3)
+
+		wasInCache := c.Set("aaa", 100)
+		require.False(t, wasInCache)
+
+		wasInCache = c.Set("bbb", 200)
+		require.False(t, wasInCache)
+
+		wasInCache = c.Set("ccc", 300)
+		require.False(t, wasInCache)
+
+		items := c.GetItems()
+		fmt.Println("1:")
+		for index, item := range items {
+			fmt.Printf("key: %v, value: %p %v\n", index, &item, item)
+		}
+
+		wasInCache = c.Set("ddd", 400)
+		require.False(t, wasInCache)
+
+		items = c.GetItems()
+		fmt.Println("2:")
+		for index, item := range items {
+			fmt.Printf("key: %v, value: %p %v\n", index, &item, item)
+		}
+
+		_, wasInCache = c.Get("aaa")
+		require.False(t, wasInCache)
+
+		value, wasInCache = c.Get("bbb")
+		require.True(t, wasInCache)
+		require.Equal(t, 200, value)
+
+		value, wasInCache = c.Get("ccc")
+		require.True(t, wasInCache)
+		require.Equal(t, 300, value)
+
+		value, wasInCache = c.Get("ddd")
+		require.True(t, wasInCache)
+		require.Equal(t, 400, value)
+	})
+
+	t.Run("purge logic2", func(t *testing.T) {
+		var value interface{}
+
+		c := NewCache(3)
+
+		c.Set("aaa", 100)
+		c.Set("bbb", 200)
+		c.Set("ccc", 300)
+		c.Get("bbb")
+		c.Set("ccc", 1000)
+		c.Set("ddd", 1000)
+
+		_, wasInCache := c.Get("aaa")
+		require.False(t, wasInCache)
+
+		value, wasInCache = c.Get("bbb")
+		require.True(t, wasInCache)
+		require.Equal(t, 200, value)
+
+		value, wasInCache = c.Get("ccc")
+		require.True(t, wasInCache)
+		require.Equal(t, 1000, value)
+
+		value, wasInCache = c.Get("ddd")
+		require.True(t, wasInCache)
+		require.Equal(t, 1000, value)
+	})
+
+	t.Run("clear cache", func(t *testing.T) {
+		c := NewCache(3)
+
+		c.Set("aaa", 100)
+		c.Set("bbb", 200)
+		c.Set("ccc", 300)
+
+		value, wasInCache := c.Get("aaa")
+		require.True(t, wasInCache)
+		require.Equal(t, 100, value)
+
+		value, wasInCache = c.Get("bbb")
+		require.True(t, wasInCache)
+		require.Equal(t, 200, value)
+
+		value, wasInCache = c.Get("ccc")
+		require.True(t, wasInCache)
+		require.Equal(t, 300, value)
+
+		c.Clear()
+
+		_, wasInCache = c.Get("aaa")
+		require.False(t, wasInCache)
+
+		_, wasInCache = c.Get("bbb")
+		require.False(t, wasInCache)
+
+		_, wasInCache = c.Get("ccc")
+		require.False(t, wasInCache)
 	})
 }
 
 func TestCacheMultithreading(t *testing.T) {
-	t.Skip() // Remove me if task with asterisk completed.
-
 	c := NewCache(10)
 	wg := &sync.WaitGroup{}
 	wg.Add(2)
