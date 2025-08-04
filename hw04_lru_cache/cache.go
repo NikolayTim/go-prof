@@ -8,7 +8,6 @@ type Cache interface {
 	Set(key Key, value interface{}) bool
 	Get(key Key) (interface{}, bool)
 	Clear()
-	GetItems() map[Key]*ListItem
 }
 
 type lruCache struct {
@@ -16,10 +15,6 @@ type lruCache struct {
 	queue    List
 	mu       sync.RWMutex
 	items    map[Key]*ListItem
-}
-
-func (cache *lruCache) GetItems() map[Key]*ListItem {
-	return cache.items
 }
 
 func NewCache(capacity int) Cache {
@@ -49,7 +44,7 @@ func (cache *lruCache) Set(key Key, value interface{}) bool {
 
 	if item, ok := cache.items[key]; ok {
 		cache.queue.Remove(item)
-		item := cache.queue.PushFront(value)
+		item := cache.queue.PushFront(value, key)
 
 		cache.items[key] = item
 
@@ -59,17 +54,11 @@ func (cache *lruCache) Set(key Key, value interface{}) bool {
 	if cache.queue.Len() == cache.capacity {
 		last := cache.queue.Back()
 
-		for index, value := range cache.items {
-			if value == last {
-				delete(cache.items, index)
-				break
-			}
-		}
-
+		delete(cache.items, last.Key)
 		cache.queue.Remove(last)
 	}
 
-	item := cache.queue.PushFront(value)
+	item := cache.queue.PushFront(value, key)
 	cache.items[key] = item
 
 	return false

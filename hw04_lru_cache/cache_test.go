@@ -1,7 +1,6 @@
 package hw04lrucache
 
 import (
-	"fmt"
 	"math/rand"
 	"strconv"
 	"sync"
@@ -64,20 +63,8 @@ func TestCache(t *testing.T) {
 		wasInCache = c.Set("ccc", 300)
 		require.False(t, wasInCache)
 
-		items := c.GetItems()
-		fmt.Println("1:")
-		for index, item := range items {
-			fmt.Printf("key: %v, value: %p %v\n", index, &item, item)
-		}
-
 		wasInCache = c.Set("ddd", 400)
 		require.False(t, wasInCache)
-
-		items = c.GetItems()
-		fmt.Println("2:")
-		for index, item := range items {
-			fmt.Printf("key: %v, value: %p %v\n", index, &item, item)
-		}
 
 		_, wasInCache = c.Get("aaa")
 		require.False(t, wasInCache)
