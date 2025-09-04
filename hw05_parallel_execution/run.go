@@ -7,11 +7,12 @@ import (
 )
 
 var ErrErrorsLimitExceeded = errors.New("errors limit exceeded")
+
 var errorsCount int32
 
 type Task func() error
 
-func worker(channel <-chan Task, results chan<- error, id, m int, wg *sync.WaitGroup) {
+func worker(channel <-chan Task, results chan<- error, m int, wg *sync.WaitGroup) {
 	for task := range channel {
 		if atomic.LoadInt32(&errorsCount) >= int32(m) {
 			break
@@ -46,7 +47,7 @@ func Run(tasks []Task, n, m int) error {
 
 	for i := 0; i < n; i++ {
 		wg.Add(1)
-		go worker(channel, results, i, m, &wg)
+		go worker(channel, results, m, &wg)
 	}
 
 	for _, v := range tasks {
