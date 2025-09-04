@@ -44,7 +44,8 @@ func (cache *lruCache) Set(key Key, value interface{}) bool {
 
 	if item, ok := cache.items[key]; ok {
 		cache.queue.Remove(item)
-		item := cache.queue.PushFront(value, key)
+		item := cache.queue.PushFront(value)
+		item.Key = key
 
 		cache.items[key] = item
 
@@ -58,7 +59,8 @@ func (cache *lruCache) Set(key Key, value interface{}) bool {
 		cache.queue.Remove(last)
 	}
 
-	item := cache.queue.PushFront(value, key)
+	item := cache.queue.PushFront(value)
+	item.Key = key
 	cache.items[key] = item
 
 	return false

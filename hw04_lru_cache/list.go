@@ -4,8 +4,8 @@ type List interface {
 	Len() int
 	Front() *ListItem
 	Back() *ListItem
-	PushFront(v interface{}, k Key) *ListItem
-	PushBack(v interface{}, k Key) *ListItem
+	PushFront(v interface{}) *ListItem
+	PushBack(v interface{}) *ListItem
 	Remove(i *ListItem)
 	MoveToFront(i *ListItem)
 }
@@ -35,8 +35,8 @@ func (l *list) Back() *ListItem {
 	return l.last
 }
 
-func (l *list) PushBack(v interface{}, k Key) *ListItem {
-	item := ListItem{Value: v, Key: k, Prev: l.last, Next: nil}
+func (l *list) PushBack(v interface{}) *ListItem {
+	item := ListItem{Value: v, Prev: l.last, Next: nil}
 
 	if l.last != nil {
 		l.last.Next = &item
@@ -52,8 +52,8 @@ func (l *list) PushBack(v interface{}, k Key) *ListItem {
 	return &item
 }
 
-func (l *list) PushFront(v interface{}, k Key) *ListItem {
-	item := ListItem{Value: v, Key: k, Prev: nil, Next: l.first}
+func (l *list) PushFront(v interface{}) *ListItem {
+	item := ListItem{Value: v, Prev: nil, Next: l.first}
 
 	if l.first != nil {
 		l.first.Prev = &item
